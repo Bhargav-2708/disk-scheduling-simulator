@@ -130,38 +130,41 @@ const Index = () => {
             <div className="h-4 w-px bg-white/10 mx-2" />
             
             <div className="flex items-center gap-3">
-              <button 
-                onClick={() => setUseBackend(!useBackend)}
-                className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter transition-all ${
-                  useBackend 
-                    ? "bg-primary/20 text-primary border border-primary/30" 
-                    : "bg-rose-500/20 text-rose-400 border border-rose-500/40"
-                }`}
-              >
-                {useBackend ? "Backend: ON" : "Backend: OFF"}
-              </button>
+              {import.meta.env.DEV && (
+                <>
+                  <button 
+                    onClick={() => setUseBackend(!useBackend)}
+                    className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter transition-all ${
+                      useBackend 
+                        ? "bg-primary/20 text-primary border border-primary/30" 
+                        : "bg-rose-500/20 text-rose-400 border border-rose-500/40"
+                    }`}
+                  >
+                    {useBackend ? "Backend: ON" : "Backend: OFF"}
+                  </button>
 
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-white/5 border border-white/10 cursor-help transition-all">
-                      <div className="relative flex h-2 w-2">
-                        {apiStatus === "online" ? (
-                          <>
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                          </>
-                        ) : (
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-                        )}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-white/5 border border-white/10 cursor-help transition-all">
+                        <div className="relative flex h-2 w-2">
+                          {apiStatus === "online" ? (
+                            <>
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </>
+                          ) : (
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                          )}
+                        </div>
+                        <span className="text-[10px] font-black uppercase tracking-tighter opacity-70">
+                          {apiStatus === "online" ? "API Live" : "Offline"}
+                        </span>
                       </div>
-                      <span className="text-[10px] font-black uppercase tracking-tighter opacity-70">
-                        {apiStatus === "online" ? "API Live" : "Offline"}
-                      </span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>Backend Status</TooltipContent>
-                </Tooltip>
+                    </TooltipTrigger>
+                    <TooltipContent>Backend Status</TooltipContent>
+                  </Tooltip>
+                </>
+              )}
 
                 <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[12px] font-bold text-primary tracking-wider">
                   v1.2.0
