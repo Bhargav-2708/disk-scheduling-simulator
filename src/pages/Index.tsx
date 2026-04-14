@@ -143,33 +143,34 @@ const Index = () => {
                     {useBackend ? "Backend: ON" : "Backend: OFF"}
                   </button>
 
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-white/5 border border-white/10 cursor-help transition-all">
-                        <div className="relative flex h-2 w-2">
-                          {apiStatus === "online" ? (
-                            <>
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                            </>
-                          ) : (
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-                          )}
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-white/5 border border-white/10 cursor-help transition-all">
+                          <div className="relative flex h-2 w-2">
+                            {apiStatus === "online" ? (
+                              <>
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                              </>
+                            ) : (
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                            )}
+                          </div>
+                          <span className="text-[10px] font-black uppercase tracking-tighter opacity-70">
+                            {apiStatus === "online" ? "API Live" : "Offline"}
+                          </span>
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-tighter opacity-70">
-                          {apiStatus === "online" ? "API Live" : "Offline"}
-                        </span>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>Backend Status</TooltipContent>
-                  </Tooltip>
+                      </TooltipTrigger>
+                      <TooltipContent>Backend Status</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </>
               )}
 
-                <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[12px] font-bold text-primary tracking-wider">
-                  v1.2.0
-                </div>
-              </TooltipProvider>
+              <div className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-[12px] font-bold text-primary tracking-wider">
+                v1.2.0
+              </div>
             </div>
           </div>
         </div>
