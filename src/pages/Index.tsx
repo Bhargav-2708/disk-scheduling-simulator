@@ -20,7 +20,7 @@ const Index = () => {
   const [apiStatus, setApiStatus] = useState<"connecting" | "online" | "offline">("connecting");
   const [isDocOpen, setIsDocOpen] = useState(false);
   const [isAlgoHubOpen, setIsAlgoHubOpen] = useState(false);
-  const [useBackend, setUseBackend] = useState(true);
+  const [useBackend, setUseBackend] = useState(false);
 
   const checkApiStatus = useCallback(async () => {
     try {
@@ -62,7 +62,6 @@ const Index = () => {
           throw new Error();
         }
       } catch {
-        toast.error("API Error", { description: "Using local engine fallback." });
         setResults(runAllAlgorithms(requests, head, diskSize));
       } finally {
         setIsSimulating(false);
