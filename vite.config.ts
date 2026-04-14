@@ -5,6 +5,7 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig(() => ({
+  base: "/disk-scheduling-simulator/",
   server: {
     host: "::",
     port: 8080,
