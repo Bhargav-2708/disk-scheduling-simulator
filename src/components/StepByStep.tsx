@@ -1,17 +1,10 @@
 import { useState } from "react";
 import type { AlgorithmResult } from "@/lib/diskAlgorithms";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 interface StepByStepProps {
   results: AlgorithmResult[];
 }
-
-const COLORS: Record<string, string> = {
-  FCFS: "border-chart-fcfs/30 bg-chart-fcfs/5",
-  SSTF: "border-chart-sstf/30 bg-chart-sstf/5",
-  SCAN: "border-chart-scan/30 bg-chart-scan/5",
-  "C-SCAN": "border-chart-cscan/30 bg-chart-cscan/5",
-};
 
 const TEXT_COLORS: Record<string, string> = {
   FCFS: "text-chart-fcfs",

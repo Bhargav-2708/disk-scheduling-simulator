@@ -19,7 +19,7 @@ function fcfs(requests, head) {
     name: "FCFS",
     order,
     totalSeekTime: total,
-    averageSeekTime: total / requests.length,
+    averageSeekTime: total / (requests.length || 1),
     seekSequence: order,
   };
 }
@@ -50,7 +50,7 @@ function sstf(requests, head) {
     name: "SSTF",
     order,
     totalSeekTime: total,
-    averageSeekTime: total / requests.length,
+    averageSeekTime: total / (requests.length || 1),
     seekSequence: order,
   };
 }

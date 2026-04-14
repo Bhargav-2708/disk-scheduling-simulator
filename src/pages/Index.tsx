@@ -5,7 +5,7 @@ import ComparisonTable from "@/components/ComparisonTable";
 import StepByStep from "@/components/StepByStep";
 import InfoDialog from "@/components/InfoDialog";
 import { runAllAlgorithms, type AlgorithmResult } from "@/lib/diskAlgorithms";
-import { HardDrive, ExternalLink, Cpu, Activity, BookOpen, Layers, Zap, Info } from "lucide-react";
+import { HardDrive, Cpu, BookOpen, Zap, Info } from "lucide-react";
 import { toast } from "sonner";
 import {
   Tooltip,
@@ -20,8 +20,8 @@ const Index = () => {
   const [apiStatus, setApiStatus] = useState<"connecting" | "online" | "offline">("connecting");
   const [isDocOpen, setIsDocOpen] = useState(false);
   const [isAlgoHubOpen, setIsAlgoHubOpen] = useState(false);
+  const [useBackend, setUseBackend] = useState(true);
 
-  // ... (checkApiStatus useEffect stays same)
   const checkApiStatus = useCallback(async () => {
     try {
       const response = await fetch("http://localhost:5000/api/health");
@@ -43,29 +43,40 @@ const Index = () => {
 
   const handleRun = useCallback(async (requests: number[], head: number, diskSize: number) => {
     setIsSimulating(true);
-    try {
-      const response = await fetch("http://localhost:5000/api/simulate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ requests, head, diskSize }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setResults(data);
-        toast.success("Simulation Complete", {
-          description: "Backend engine synchronized.",
+    
+    if (useBackend) {
+      try {
+        const response = await fetch("http://localhost:5000/api/simulate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ requests, head, diskSize }),
         });
-      } else {
-        throw new Error();
+
+        if (response.ok) {
+          const data = await response.json();
+          setResults(data);
+          toast.success("Simulation Complete", {
+            description: "Backend engine synchronized.",
+          });
+        } else {
+          throw new Error();
+        }
+      } catch {
+        toast.error("API Error", { description: "Using local engine fallback." });
+        setResults(runAllAlgorithms(requests, head, diskSize));
+      } finally {
+        setIsSimulating(false);
       }
-    } catch {
-      toast.error("API Error", { description: "Using local engine fallback." });
-      setResults(runAllAlgorithms(requests, head, diskSize));
-    } finally {
-      setIsSimulating(false);
+    } else {
+      setTimeout(() => {
+        setResults(runAllAlgorithms(requests, head, diskSize));
+        toast.success("Simulation Complete", {
+          description: "Using local engine.",
+        });
+        setIsSimulating(false);
+      }, 500); // Simulate network delay
     }
-  }, []);
+  }, [useBackend]);
 
   const handleReset = useCallback(() => setResults([]), []);
 
@@ -120,6 +131,17 @@ const Index = () => {
             <div className="h-4 w-px bg-white/10 mx-2" />
             
             <div className="flex items-center gap-3">
+              <button 
+                onClick={() => setUseBackend(!useBackend)}
+                className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-tighter transition-all ${
+                  useBackend 
+                    ? "bg-primary/20 text-primary border border-primary/30" 
+                    : "bg-rose-500/20 text-rose-400 border border-rose-500/40"
+                }`}
+              >
+                {useBackend ? "Backend: ON" : "Backend: OFF"}
+              </button>
+
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -283,8 +305,8 @@ const Index = () => {
         </div>
       </main>
 
-      <footer className="border-t border-white/5 py-12 px-6 backdrop-blur-xl mt-12 bg-black/20">
-        <div className="container max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+      <footer className="border-t border-white/5 py-8 px-6 backdrop-blur-xl mt-12 bg-black/20">
+        <div className="container max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
               <Cpu className="w-5 h-5 text-primary" />
@@ -294,46 +316,15 @@ const Index = () => {
               <p className="text-[12px] text-muted-foreground/60">Open Source Visualization Engine</p>
             </div>
           </div>
-
-          <div className="flex flex-col items-center md:items-end gap-3">
-            <div className="flex items-center gap-4">
-              <a 
-                href="https://github.com/Bhargav-2708" 
-                target="_blank" 
-                rel="noreferrer"
-                className="p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
-              >
-                <GitHubIcon className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
-              </a>
-              <a 
-                href="https://github.com/Bhargav-2708/disk-scheduling-simulator" 
-                target="_blank" 
-                rel="noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all"
-              >
-                <span className="text-sm font-bold text-primary">Star on GitHub</span>
-                <Zap className="w-4 h-4 text-primary" />
-              </a>
-            </div>
-            <p className="text-[11px] font-medium text-muted-foreground/40 uppercase tracking-[0.2em]">
-              Crafted by <span className="text-primary/60">Bhargav-2708</span> &copy; 2024
-            </p>
-          </div>
+          <p className="text-[11px] font-medium text-muted-foreground/40 uppercase tracking-[0.2em]">
+            v1.2.0 &copy; 2026
+          </p>
         </div>
       </footer>
     </div>
   );
 };
 
-const GitHubIcon = ({ className }: { className?: string }) => (
-  <svg 
-    viewBox="0 0 24 24" 
-    fill="currentColor" 
-    className={className}
-    stroke="none"
-  >
-    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-  </svg>
-);
+
 
 export default Index;

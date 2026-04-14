@@ -16,7 +16,7 @@ export function fcfs(requests: number[], head: number): AlgorithmResult {
     name: "FCFS",
     order,
     totalSeekTime: total,
-    averageSeekTime: total / requests.length,
+    averageSeekTime: total / (requests.length || 1),
     seekSequence: order,
   };
 }
@@ -47,7 +47,7 @@ export function sstf(requests: number[], head: number): AlgorithmResult {
     name: "SSTF",
     order,
     totalSeekTime: total,
-    averageSeekTime: total / requests.length,
+    averageSeekTime: total / (requests.length || 1),
     seekSequence: order,
   };
 }
@@ -67,7 +67,7 @@ export function scan(requests: number[], head: number, diskSize: number): Algori
     name: "SCAN",
     order,
     totalSeekTime: total,
-    averageSeekTime: total / requests.length,
+    averageSeekTime: total / (requests.length || 1),
     seekSequence: order,
   };
 }
@@ -87,7 +87,7 @@ export function cscan(requests: number[], head: number, diskSize: number): Algor
     name: "C-SCAN",
     order,
     totalSeekTime: total,
-    averageSeekTime: total / requests.length,
+    averageSeekTime: total / (requests.length || 1),
     seekSequence: order,
   };
 }

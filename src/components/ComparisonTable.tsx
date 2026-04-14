@@ -65,7 +65,9 @@ const ComparisonTable = ({ results }: ComparisonTableProps) => {
                     {r.averageSeekTime.toFixed(1)}
                   </td>
                   <td className="py-5 px-6 text-right font-mono text-sm font-black tracking-tight text-primary">
-                    {(r.order.length / r.totalSeekTime * 100).toFixed(1)}%
+                    {r.totalSeekTime > 0 
+                      ? (r.order.length / r.totalSeekTime * 100).toFixed(1) 
+                      : "100.0"}%
                   </td>
                 </tr>
               );
